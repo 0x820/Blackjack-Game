@@ -25,10 +25,10 @@ int getCardValue(const Card &card)
 void printHand(const std::vector<Card> &hand)
 {
 	for(auto &card: hand)
-    {
+    	{
 		printCard(card);
 		std::cout << " ";
-    }
+    	}
 }
 
 int getScore(const std::vector<Card> &hand)
@@ -36,9 +36,9 @@ int getScore(const std::vector<Card> &hand)
 	int score = 0;
 
 	for(auto &card: hand)
-    {
+    	{
 		score += getCardValue(card);
-    }
+    	}
 
 	return score;
 }
