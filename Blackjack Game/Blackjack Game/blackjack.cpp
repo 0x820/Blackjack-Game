@@ -86,7 +86,7 @@ int playBlackjack(std::array<Card, g_NumberOfCards> &deck)
 			std::cout << "You've chosen to stand.\n";
 			break;
 		}
-    }
+    	}
 
 	//dealer's turn
 	while (1) 
