@@ -1,108 +1,90 @@
-#include "game.h"
 #include "blackjack.h"
 
-int getCardValue(const Card &card)
-{	
-	switch (card.rank)
+int Blackjack::getCardValue(Card &card)
+{
+	switch (card.getRank())
 	{
-	case RANK_2:		return 2;
-	case RANK_3:		return 3;
-	case RANK_4:		return 4;
-	case RANK_5:		return 5;
-	case RANK_6:		return 6;
-	case RANK_7:		return 7;
-	case RANK_8:		return 8;
-	case RANK_9:		return 9;
-	case RANK_10:		return 10;
-	case RANK_J:		return 10;
-	case RANK_Q:		return 10;
-	case RANK_K:		return 10;
-	case RANK_A:		return 11;
-	default:		return -1;
+		case Card::RANK_2:		return 2;
+		case Card::RANK_3:		return 3;
+		case Card::RANK_4:		return 4;
+		case Card::RANK_5:		return 5;
+		case Card::RANK_6:		return 6;
+		case Card::RANK_7:		return 7;
+		case Card::RANK_8:		return 8;
+		case Card::RANK_9:		return 9;
+		case Card::RANK_10:		return 10;
+		case Card::RANK_J:		return 10;
+		case Card::RANK_Q:		return 10;
+		case Card::RANK_K:		return 10;
+		case Card::RANK_A:		return 11;
+		default:			return -1;
 	}
 }
 
-void printHand(const std::vector<Card> &hand)
+Blackjack::eResult Blackjack::play()
 {
-	for(auto &card: hand)
-    	{
-		printCard(card);
-		std::cout << " ";
-    	}
-}
-
-int getScore(const std::vector<Card> &hand)
-{
-	int score = 0;
-
-	for(auto &card: hand)
-    	{
-		score += getCardValue(card);
-    	}
-
-	return score;
-}
-
-int playBlackjack(std::array<Card, g_NumberOfCards> &deck)
-{
-	std::vector<Card> playerHand, dealerHand;
-  
-	Card *cardPtr = &deck[0];
+	Card *currentCard = &m_deck.getCard(0);
+	
+	//Create hands for all players involved
+	Hand dealerHand, playerHand;
 
 	//dealer gets one card
-	dealerHand.push_back(*cardPtr++);
+	dealerHand.addCard(*currentCard++);
 
 	//player gets two cards
-	playerHand.push_back(*cardPtr++);
-	playerHand.push_back(*cardPtr++);
+	playerHand.addCard(*currentCard++);
+	playerHand.addCard(*currentCard++);
 
 	//player goes first
 	char option = 0;
-
-	while(1)
+	while (1)
 	{
-		printHand(playerHand);
-		std::cout << "Your score so far is " << getScore(playerHand) <<
+		std::cout << "Player hand: ";
+		playerHand.print();
+		std::cout << "Your score so far is " << playerHand.getValue() <<
 			".\nDo you wish to (h)it or (s)tand? : ";
-      
+
 		std::cin >> option;
-    
-		if(option != 'h' && option != 's')
+
+		if (option != 'h' && option != 's')
 			continue;
-    
-		if(option == 'h')
+
+		if (option == 'h')
 		{
 			std::cout << "You've chosen to hit.\n";
-			playerHand.push_back(*cardPtr++);
-	  
-			if(getScore(playerHand) > 21)
+			playerHand.addCard(*currentCard++);
+
+			if (playerHand.getValue() > 21)
 			{
 				std::cout << "You went over the score of 21.\n";
-				return GAME_LOSE; //player loses
+				return Blackjack::LOSE; //player loses
 			}
 		}
-		else 
+		else
 		{
 			std::cout << "You've chosen to stand.\n";
 			break;
 		}
-    	}
+	}
 
-	//dealer's turn
-	while (1) 
+	//(opt) more players go?
+
+	//dealer goes
+	while (1)
 	{
-		printHand(dealerHand);
-		std::cout << "Dealer's score so far is " << getScore(dealerHand) << ".\n";
-    
-		if(getScore(dealerHand) < 17)
+		std::cout << "Dealer hand: "; 
+		dealerHand.print();
+		std::cout << "Dealer's score so far is " << dealerHand.getValue() << ".\n";
+
+		if (dealerHand.getValue() < 17)
 		{
 			std::cout << "Dealer's chosen to hit.\n";
-			dealerHand.push_back(*cardPtr++);
-			
-			if(getScore(dealerHand) > 21)
+			dealerHand.addCard(*currentCard++);
+
+			if (dealerHand.getValue() > 21)
 			{
 				std::cout << "Dealer went over the score of 21.\n";
-				return GAME_WIN; //player wins
+				return Blackjack::WIN; //player wins
 			}
 		}
 		else
@@ -112,12 +94,19 @@ int playBlackjack(std::array<Card, g_NumberOfCards> &deck)
 		}
 	}
 
+	//evaluate scores
 	std::cout << "Time to evaluate scores!\n";
-  
-	if(getScore(playerHand) > getScore(dealerHand))
-		return GAME_WIN;
-	else if(getScore(playerHand) < getScore(dealerHand))
-		return GAME_LOSE;
+
+	eResult result;
+	if (playerHand.getValue() > dealerHand.getValue())
+		result = Blackjack::WIN;
+	else if (playerHand.getValue() < dealerHand.getValue())
+		result = Blackjack::LOSE;
 	else
-		return GAME_DRAW;
+		result = Blackjack::DRAW;
+
+	delete currentCard; //exception line - just debugging ? 
+	currentCard = nullptr;
+
+	return result;
 }
