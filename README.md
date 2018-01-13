@@ -17,8 +17,8 @@ C++ implementation of a Blackjack game, assumes only 1 player vs dealer.
 * Otherwise, if the player has a higher score than the dealer, the player wins. If the dealer has a higher score than the player, then the player loses. If both the dealer and the player have the same score, then it's a draw.
 
 ## Future Improvements
-* Implement the same simplified game but with an OOP approach.
-* Take account for scenario where aces can be counted as either 1 or 11.
+- [x] Implement the same simplified game but with an OOP approach.
+- [ ] Take account for scenario where aces can be counted as either 1 or 11.
 
 
 ### Special Thanks
