@@ -1,11 +1,31 @@
-#ifndef GUARD_BLACKJACK_H
-#define GUARD_BLACKJACK_H
+#pragma once
 
-#include <vector>
+#include "card.h"
+#include "deck.h"
+#include "hand.h"
 
-int getCardValue(const Card &card);
-void printHand(const std::vector<Card> &hand);
-int getScore(const std::vector<Card> &hand);
-int playBlackjack(std::array<Card, g_NumberOfCards> &deck);
 
-#endif
+class Blackjack
+{
+public:
+	enum eResult
+	{
+		WIN,
+		DRAW,
+		LOSE,
+		MAX_RESULT
+	};
+
+private:
+	Deck m_deck;
+public:
+	Blackjack() { }
+	Blackjack(Deck &deck)
+		: m_deck{ deck }
+	{
+	}
+
+	eResult play();
+
+	static int getCardValue(Card& card);
+};
