@@ -3,6 +3,7 @@
 #include "card.h"
 #include "deck.h"
 #include "hand.h"
+#include <cassert>
 
 
 class Blackjack
@@ -23,6 +24,7 @@ public:
 	Blackjack(Deck &deck)
 		: m_deck{ deck }
 	{
+		assert(m_deck.isShuffled());
 	}
 
 	eResult play();
