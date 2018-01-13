@@ -1,5 +1,5 @@
 #include "game.h"
-//test
+
 void printCard(const Card &card)
 {
 	switch (card.rank)
