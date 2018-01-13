@@ -20,6 +20,8 @@ int main()
 	}
 	else
 		std::cout << "You draw.\n";
-
+	
+	delete game;
+	game = nullptr;
 	return 0;
 }
